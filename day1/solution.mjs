@@ -24,8 +24,8 @@ for (const line of lines) {
     last = undefined;
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
-    let n = Number.parseInt(c);
-    if (Number.isNaN(n)) {
+    let n = parseInt(c);
+    if (isNaN(n)) {
       for (const [key, value] of Object.entries(DIGITS_TABLE)) {
         if (line.startsWith(key, i)) {
           n = value;
@@ -33,7 +33,7 @@ for (const line of lines) {
         }
       }
     }
-    if (!Number.isNaN(n)) {
+    if (!isNaN(n)) {
       if (first === undefined) {
         first = n;
       }
