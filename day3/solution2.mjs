@@ -27,23 +27,20 @@ function markGear(x, y, i) {
   }
 }
 
+const DIGITS_REGEX = /(?<digits>\d+)/g;
+
 for (let j = 0; j < m; j++) {
   const line = lines[j];
-  let i = 0;
-  while (i < n) {
-    const c = line[i];
-    if (!isNaN(Number(c))) {
-      const n = parseInt(line.substring(i), 10);
-      const l = String(n).length;
-      markGear(i - 1, j, n);
-      markGear(i + l, j, n);
-      for (let x = i - 1; x < i + l + 1; x++) {
-        markGear(x, j - 1, n);
-        markGear(x, j + 1, n);
-      }
-      i += l;
-    } else {
-      i++;
+  for (const match of line.matchAll(DIGITS_REGEX)) {
+    const i = match.index;
+    const s = match.groups.digits;
+    const l = s.length;
+    const n = +s;
+    markGear(i - 1, j, n);
+    markGear(i + l, j, n);
+    for (let x = i - 1; x < i + l + 1; x++) {
+      markGear(x, j - 1, n);
+      markGear(x, j + 1, n);
     }
   }
 }
