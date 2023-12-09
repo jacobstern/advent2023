@@ -3,6 +3,20 @@
 import { readFile } from 'node:fs/promises';
 import { argv } from 'node:process';
 
+function gcd(a, b) {
+  let t;
+  while (b !== 0) {
+    t = b;
+    b = a % b;
+    a = t;
+  }
+  return a;
+}
+
+function lcm(a, b) {
+  return (a * b) / gcd(a, b);
+}
+
 const NODE_REGEX = /^(?<start>\w+) = \((?<left>\w+), (?<right>\w+)\)$/;
 
 const network = await readFile(argv[2] || './input', {
@@ -24,28 +38,6 @@ for (let i = 2; i < lines.length; i++) {
       currentLocations.push(start);
     }
   }
-}
-
-function gcd(a, b) {
-  let t;
-  while (b !== 0) {
-    t = b;
-    b = a % b;
-    a = t;
-  }
-  return a;
-}
-
-function lcm(a, b) {
-  return (a * b) / gcd(a, b);
-}
-
-function lcmMultiple(ns) {
-  let acc = ns[0];
-  for (let i = 1; i < ns.length; i++) {
-    acc = lcm(ns[i], acc);
-  }
-  return acc;
 }
 
 const destinationIters = [];
@@ -70,4 +62,5 @@ while (currentLocations.length) {
   currentLocations = remainingLocations;
 }
 
-console.log(lcmMultiple(destinationIters) * directions.length);
+const steps = destinationIters.reduce(lcm) * directions.length;
+console.log(steps);
