@@ -4,9 +4,9 @@ import { readFile } from 'node:fs/promises';
 import { argv } from 'node:process';
 
 function numValidOperations(time, distance) {
+  const sqrtTerm = Math.sqrt(time * time - 4 * distance);
   return (
-    Math.floor(0.5 * (Math.sqrt(time * time - 4 * distance) + time)) -
-    Math.floor(0.5 * (time - Math.sqrt(time * time - 4 * distance)))
+    Math.floor(0.5 * (sqrtTerm + time)) - Math.floor(0.5 * (time - sqrtTerm))
   );
 }
 
