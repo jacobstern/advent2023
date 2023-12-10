@@ -52,6 +52,8 @@ for (const [j, line] of lines.entries()) {
     if (line[i] === 'S') {
       x = i;
       y = j;
+      done = true;
+      break;
     }
   }
   if (done) {
@@ -84,9 +86,7 @@ for (let j = 0; j < m; j++) {
   loopTiles[j] = new Array(n);
 }
 
-let length = 1;
 while (tile !== 'S') {
-  length++;
   loopTiles[y][x] = tile;
   const backDirection = Directions.opposite(priorDirection);
   const direction = PIPES_DIRECTIONS.get(tile).find((d) => d !== backDirection);
