@@ -90,24 +90,20 @@ function compareHands(l, r) {
   return 0;
 }
 
-function compareHandRecords(l, r) {
-  return compareHands(l.hand, r.hand);
-}
-
-const handRecords = [];
+const hands = [];
 for (const line of handsList.split('\n')) {
   if (line) {
     const [handString, betDigits] = line.split(' ');
-    handRecords.push({
+    hands.push({
       hand: handString.split(''),
       bet: +betDigits,
     });
   }
 }
-handRecords.sort(compareHandRecords);
+hands.sort((l, r) => compareHands(l.hand, r.hand));
 
 let sum = 0;
-for (const [i, { bet }] of handRecords.entries()) {
+for (const [i, { bet }] of hands.entries()) {
   const rank = i + 1;
   sum += rank * bet;
 }
