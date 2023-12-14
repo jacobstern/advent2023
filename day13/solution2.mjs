@@ -49,11 +49,11 @@ function analyze(pattern) {
   }
   const columns = [];
   for (let i = 0; i < pattern[0].length; i++) {
-    const column = [];
+    let column = '';
     for (let j = 0; j < pattern.length; j++) {
-      column.push(pattern[j][i]);
+      column += pattern[j][i];
     }
-    columns.push(column.join(''));
+    columns.push(column);
   }
   const vertical = findReflection(columns);
   assert.notStrictEqual(vertical, -1, 'Unable to find reflection');
