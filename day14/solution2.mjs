@@ -42,7 +42,7 @@ for (let d = 0; d < 4; d++) {
   blockers.push(direction);
 }
 
-let stones = [];
+let stones = new Array(n);
 for (let x = 0; x < n; x++) {
   const column = [];
   for (let y = 0; y < n; y++) {
@@ -51,13 +51,12 @@ for (let x = 0; x < n; x++) {
       column.push(y);
     }
   }
-  stones.push(column);
+  stones[x] = column;
 }
 
-const seenBoards = [],
-  boardsIndex = new Map();
+const seenBoards = [];
 let loopStart, loopEnd;
-for (let iter = 0; iter < 1000000000; iter++) {
+for (let iter = 0, boardsIndex = new Map(); iter < 1000000000; iter++) {
   const encodedBoard = JSON.stringify(stones);
   if (boardsIndex.has(encodedBoard)) {
     loopStart = boardsIndex.get(encodedBoard);
