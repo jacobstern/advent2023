@@ -43,7 +43,6 @@ function shootBeam(grid, n, location, direction) {
     } else if (SPLITTERS[c] && !SPLITTERS[c].includes(direction)) {
       return { visited, split: location1D };
     }
-    // Don't add splitter location to visited list
     visited.push(location1D);
     location = Directions.moveFrom(location, direction);
   }
@@ -56,6 +55,7 @@ const grid = map
   .split('\n')
   .filter((line) => !!line)
   .map((line) => line.split(''));
+
 const n = grid.length;
 const splitterBeams = new Array(n * n);
 for (let y = 0; y < n; y++) {
@@ -69,30 +69,14 @@ for (let y = 0; y < n; y++) {
     }
   }
 }
-const configurations = [];
-for (let i = 0; i < n; i++) {
-  configurations.push({ location: [0, i], direction: Directions.RIGHT });
-  configurations.push({ location: [i, 0], direction: Directions.DOWNWARD });
-  configurations.push({ location: [n - 1, i], direction: Directions.LEFT });
-  configurations.push({ location: [i, n - 1], direction: Directions.UPWARD });
-}
-let max = 0;
-for (const { location, direction } of configurations) {
-  const { visited, split } = shootBeam(grid, n, location, direction);
+
+const runSplitterTraversal = (start) => {
   const energized = new Array(n * n);
-  for (const location1D of visited) {
-    energized[location1D] = 1;
-  }
   const visitedSplitters = new Array(n * n);
-  const splitters = [];
-  if (split != null) {
-    splitters.push(split);
-  }
+  const splitters = [start];
   while (splitters.length) {
     const location1D = splitters.pop();
-    if (Object.hasOwn(visitedSplitters, location1D)) {
-      continue;
-    }
+    if (Object.hasOwn(visitedSplitters, location1D)) continue;
     visitedSplitters[location1D] = 1;
     const destinations = splitterBeams[location1D];
     for (const { visited, split } of destinations) {
@@ -103,6 +87,28 @@ for (const { location, direction } of configurations) {
         splitters.push(split);
       }
     }
+  }
+  return energized;
+};
+
+const configurations = [];
+for (let i = 0; i < n; i++) {
+  configurations.push({ location: [0, i], direction: Directions.RIGHT });
+  configurations.push({ location: [i, 0], direction: Directions.DOWNWARD });
+  configurations.push({ location: [n - 1, i], direction: Directions.LEFT });
+  configurations.push({ location: [i, n - 1], direction: Directions.UPWARD });
+}
+
+let max = 0;
+for (const { location, direction } of configurations) {
+  const { visited, split } = shootBeam(grid, n, location, direction);
+  if (split == null) {
+    max = Math.max(max, visited.length);
+    continue;
+  }
+  const energized = runSplitterTraversal(split);
+  for (const location of visited) {
+    energized[location] = 1;
   }
   const energizedCount = Object.keys(energized).length;
   max = Math.max(max, energizedCount);
